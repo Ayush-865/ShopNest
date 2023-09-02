@@ -34,7 +34,7 @@ const SignUp = () => {
       alert(errorMessage); 
     }
     else if (result.status === 200) {
-      localStorage.setItem("user", JSON.stringify());
+      localStorage.setItem("user", JSON.stringify(data));
       navigate('/');
     }
   }
