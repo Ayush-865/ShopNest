@@ -43,11 +43,14 @@ body {
   height: 80vh;
 }
 
+.addProductContainer{
+  height: fit-content;
+}
+
 .login,
 .register,
 .profile,
-.updateProduct{
-  overflow: hidden;
+.updateProduct {
   color: white;
   display: flex;
   flex-direction: column;
@@ -72,10 +75,6 @@ body {
   border-radius: 10px;
   width: clamp(33%, 450px, 90%);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -25%);
 }
 
 .addProduct img {
@@ -130,6 +129,16 @@ body {
   outline: none;
   width: 100%;
 }
+.searchInputContainer{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchInput {
+  width: clamp(30%, 400px, 90%);
+}
 
 .inputBox::placeholder {
   color: white;
@@ -174,13 +183,13 @@ button:hover {
 .productCard {
   min-width: 30%;
   width: fit-content;
-  height:fit-content;
+  height: fit-content;
   margin-bottom: 30px;
   color: white;
   border-radius: 20px;
   overflow: hidden;
   background-color: black;
-  padding:30px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
