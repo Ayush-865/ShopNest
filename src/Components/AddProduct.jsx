@@ -1,7 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Loader from './Loader';
 
 const AddProduct = () => {
+
+  const [isloading, setIsLoading] = useState(false);
 
   const [productImage, setProductImage] = useState("./defaultProduct.jpg")
   const [name, setName] = useState("");
@@ -33,8 +36,8 @@ const AddProduct = () => {
   }
 
   const handleAddProduct = async () => {
-    console.log(productImage)
-    const res = await fetch("https://shopnest-backend.onrender.com/api/products/addProduct", {
+    try {
+      const res = await fetch("https://shopnest-backend.onrender.com/api/products/addProduct", {
       mode: 'cors',
       headers: {
         "Content-Type": "application/json",
@@ -50,10 +53,19 @@ const AddProduct = () => {
     } else {
       console.error("Error uploading image:", data.message);
     }
+    } catch (error) {
+      
+    }finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <>
+      {
+        isloading==true ? (
+          <Loader/>
+        ):(
       <div className="addProductContainer">
         <div className="addProduct">
           <h1>Add Product</h1>
@@ -66,6 +78,8 @@ const AddProduct = () => {
           <button className='loginbutton' type='button' onClick={handleAddProduct}>Add</button>
         </div>
       </div>
+        )
+      }
     </>
   )
 }

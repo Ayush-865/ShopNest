@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -14,8 +15,6 @@ const ProductsList = () => {
     result = await result.json();
     setProducts(result);
   };
-  console.warn(products);
-
   const handleDeleteProduct = async (id) => {
     await fetch(
       `https://shopnest-backend.onrender.com/api/products/product/${id}`,
@@ -47,46 +46,52 @@ const ProductsList = () => {
 
   return (
     <>
-      <div className="searchInputContainer">
-        <input
-          className="inputBox searchInput"
-          onChange={handleSearch}
-          type="text"
-          placeholder="Seach Products"
-        />
-      </div>
-      <div className="productList-container">
-        {console.log(products)}
-        {products.length > 0 ? (
-          products.map((item, index) => (
-            <div className="productCard">
-              <ul>
-                <li>
-                  <img src={item.image} alt={item.name} />
-                </li>
-                <li>Name: {item.name}</li>
-                <li>Price: {item.price}</li>
-                <li>Category: {item.category}</li>
-                <li>Company: {item.company}</li>
-              </ul>
-              <div>
-                <button>
-                  <Link to={"/update/" + item._id}>Update</Link>
-                </button>
-                <button
-                  onClick={() => {
-                    handleDeleteProduct(item._id);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <h1>Loading Products...</h1>
-        )}
-      </div>
+      {products.length == 0 ? (
+        <Loader />
+      ) : (
+        <>
+          <div className="searchInputContainer">
+            <input
+              className="inputBox searchInput"
+              onChange={handleSearch}
+              type="text"
+              placeholder="Seach Products"
+            />
+          </div>
+          <div className="productList-container">
+            {console.log(products)}
+            {products.length > 0 ? (
+              products.map((item, index) => (
+                <div className="productCard">
+                  <ul>
+                    <li>
+                      <img src={item.image} alt={item.name} />
+                    </li>
+                    <li>Name: {item.name}</li>
+                    <li>Price: {item.price}</li>
+                    <li>Category: {item.category}</li>
+                    <li>Company: {item.company}</li>
+                  </ul>
+                  <div>
+                    <button>
+                      <Link to={"/update/" + item._id}>Update</Link>
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDeleteProduct(item._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <h1>No Products Found</h1>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 };

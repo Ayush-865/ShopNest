@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 const Login = () => {
+  const [isloading, setIsLoading]=useState(false);
   const navigate = useNavigate();
    //very imp to note //using this we check if data is stored in local storage and navigate the user to "/"
   useEffect(() => {
@@ -16,6 +18,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       const result = await fetch("https://shopnest-backend.onrender.com/api/auth/login", {
         method: 'POST',
         headers: {
@@ -36,25 +39,34 @@ const Login = () => {
         let errorMessage = data.error;
         alert(errorMessage); 
       } else if (result.status === 200) {
-        localStorage.setItem("user", JSON.stringify(data)); // Save the data received from the server
+        localStorage.setItem("user", JSON.stringify(data)); 
         navigate('/');
       }
     } catch (error) {
       console.error(error);
       alert("An error occurred while logging in.");
+    } finally {
+      setIsLoading(false); 
     }
   };
 
   return (
     <>
-    <div className="loginContainer">
+    {
+      isloading==true ?
+      (
+        <Loader/>
+      ):(
+      <div className="loginContainer">
       <div className="login">
         <h1>LOGIN</h1>
         <input className='inputBox' type='text' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Enter Email' />
         <input className='inputBox' type='password' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Enter Password' />
         <button className='loginbutton' type='button' onClick={handleLogin}>LOGIN UP</button>
       </div>
-    </div>
+      </div>
+      )
+    }
     </>
   );
 };
