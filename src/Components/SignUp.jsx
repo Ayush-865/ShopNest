@@ -18,6 +18,7 @@ const SignUp = () => {
   }, []);
 
   const collectData = async () => {
+    setIsLoading(true);
     try {
       const result = await fetch(
         "https://shopnest-backend.onrender.com/api/auth/register",

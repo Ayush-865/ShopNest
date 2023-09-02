@@ -27,21 +27,28 @@ const Profile = () => {
   };
 
   const uploadImage = async () => {
-    console.log(image);
-    const res = await fetch("https://shopnest-backend.onrender.com/api/image/imgProfile", {
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": `${id}`,
-      },
-      method: "POST",
-      body: JSON.stringify({ image: image }),
-    });
+    if (image==="defaultImage.jpg") {
+        alert("Select an Image")
+    }else{
+      console.log(image);
+    const res = await fetch(
+      "https://shopnest-backend.onrender.com/api/image/imgProfile",
+      {
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": `${id}`,
+        },
+        method: "POST",
+        body: JSON.stringify({ image: image }),
+      }
+    );
     const data = await res.json();
     if (data.Status === "ok") {
       alert("Image uploaded successfully.");
     } else {
       console.error("Error uploading image:", data.message);
+    }
     }
   };
 
@@ -89,7 +96,7 @@ const Profile = () => {
       <div className="profileContainer">
         <div className="profile">
           <img src={image} alt="Profile Image" />
-          <p>Upload Profile Picture</p>
+          <p>Upload Profile Picture (Only Once) </p>
           <input accept="image/*" type="file" onChange={getImg} />
           <button onClick={uploadImage}>Upload</button>
           <div>Name: {name} </div>
