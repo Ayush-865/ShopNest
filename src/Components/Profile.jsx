@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import Loader from "./Loader";
 
 const Profile = () => {
+  const [isloading, setIsLoading] = useState(false);
   const id = JSON.parse(localStorage.getItem("user")).authToken;
   const [image, setImage] = useState("defaultImage.jpg");
   const [name, setName] = useState("");
@@ -27,28 +29,36 @@ const Profile = () => {
   };
 
   const uploadImage = async () => {
-    if (image==="defaultImage.jpg") {
-        alert("Select an Image")
-    }else{
-      console.log(image);
-    const res = await fetch(
-      "https://shopnest-backend.onrender.com/api/image/imgProfile",
-      {
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "auth-token": `${id}`,
-        },
-        method: "POST",
-        body: JSON.stringify({ image: image }),
+    try {
+      setIsLoading(true);
+      if (image === "defaultImage.jpg") {
+        alert("Select an Image");
+      } else {
+        console.log(image);
+        const res = await fetch(
+          "https://shopnest-backend.onrender.com/api/image/imgProfile",
+          {
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": `${id}`,
+            },
+            method: "POST",
+            body: JSON.stringify({ image: image }),
+          }
+        );
+        const data = await res.json();
+        if (data.Status === "ok") {
+          alert("Image uploaded successfully.");
+        } else {
+          console.error("Error uploading image:", data.message);
+        }
       }
-    );
-    const data = await res.json();
-    if (data.Status === "ok") {
-      alert("Image uploaded successfully.");
-    } else {
-      console.error("Error uploading image:", data.message);
-    }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging in.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,35 +84,47 @@ const Profile = () => {
   };
 
   const getUser = async () => {
-    if (id) {
-      const getUserData = await fetch(
-        "https://shopnest-backend.onrender.com/api/auth/getUser",
-        {
-          method: "get",
-          headers: {
-            "auth-token": `${id}`,
-          },
-        }
-      );
-      const data = await getUserData.json();
-      setName(data.name);
-      setEmail(data.email);
-      setAuthId(data._id);
+    try {
+      setIsLoading(true);
+      if (id) {
+        const getUserData = await fetch(
+          "https://shopnest-backend.onrender.com/api/auth/getUser",
+          {
+            method: "get",
+            headers: {
+              "auth-token": `${id}`,
+            },
+          }
+        );
+        const data = await getUserData.json();
+        setName(data.name);
+        setEmail(data.email);
+        setAuthId(data._id);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging in.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <div className="profileContainer">
-        <div className="profile">
-          <img src={image} alt="Profile Image" />
-          <p>Upload Profile Picture (Only Once) </p>
-          <input accept="image/*" type="file" onChange={getImg} />
-          <button onClick={uploadImage}>Upload</button>
-          <div>Name: {name} </div>
-          <div>Email: {email} </div>
+      {isloading == true ? (
+        <Loader />
+      ) : (
+        <div className="profileContainer">
+          <div className="profile">
+            <img src={image} alt="Profile Image" />
+            <p>Upload Profile Picture (Only Once) </p>
+            <input accept="image/*" type="file" onChange={getImg} />
+            <button onClick={uploadImage}>Upload</button>
+            <div>Name: {name} </div>
+            <div>Email: {email} </div>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
