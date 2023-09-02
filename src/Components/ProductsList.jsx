@@ -3,17 +3,24 @@ import { Link } from "react-router-dom";
 import Loader from "./Loader";
 
 const ProductsList = () => {
+  const [isloading, setIsLoading]=useState(false);
   const [products, setProducts] = useState([]);
   useEffect(() => {
     getProducts();
   }, []);
 
   const getProducts = async () => {
-    let result = await fetch(
-      "https://shopnest-backend.onrender.com/api/products/getProducts"
-    );
-    result = await result.json();
-    setProducts(result);
+    try {
+      setIsLoading(true)
+      let result = await fetch(
+        "https://shopnest-backend.onrender.com/api/products/getProducts"
+      );
+      result = await result.json();
+      setProducts(result);
+    } catch (error) {
+    } finally{
+      setIsLoading(false)
+    }
   };
   const handleDeleteProduct = async (id) => {
     await fetch(
@@ -46,7 +53,7 @@ const ProductsList = () => {
 
   return (
     <>
-      {products.length == 0 ? (
+      {isloading == true ? (
         <Loader />
       ) : (
         <>
