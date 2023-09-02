@@ -8,7 +8,7 @@ const ProductState = (props) => {
     }, [products]);
 
     const getProducts = async () => {
-        let response = await fetch("http://localhost:5000/api/products/getProducts");
+        let response = await fetch("https://shopnest-backend.onrender.com/api/products/getProducts");
         if (response.ok) {
             let result = await response.json();
             setProducts(result);
@@ -19,7 +19,7 @@ const ProductState = (props) => {
     }
 
     const handleDeleteProduct = async (id) => {
-        await fetch(`http://localhost:5000/api/products/product/${id}`, {
+        await fetch(`https://shopnest-backend.onrender.com/api/products/product/${id}`, {
           method: 'Delete'
         });
         // After deletion, update the products state by removing the deleted product from the list
