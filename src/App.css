@@ -140,11 +140,13 @@ body {
 .searchInput {
   width: clamp(30%, 400px, 90%);
 }
-
 .inputBox::placeholder {
   color: white;
 }
 
+.redplaceholder::placeholder{
+  color: red;
+}
 .inputBox:hover {
   background-color: #444;
 }
