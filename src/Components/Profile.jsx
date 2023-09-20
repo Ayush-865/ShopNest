@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Loader from "./Loader";
+import productContext from "../context/productContext";
 
 const Profile = () => {
   const [isloading, setIsLoading] = useState(false);
   const id = JSON.parse(localStorage.getItem("user")).authToken;
   const [image, setImage] = useState("defaultImage.jpg");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [authId, setAuthId] = useState("");
+
+  const {name, email, profileIsLoading}=useContext(productContext);
 
   useEffect(() => {
     retrieveImage();
-    getUser();
   }, []);
 
   const converttoBase64 = (file) => {
@@ -83,35 +82,9 @@ const Profile = () => {
     setImage(img);
   };
 
-  const getUser = async () => {
-    try {
-      setIsLoading(true);
-      if (id) {
-        const getUserData = await fetch(
-          "https://shopnest-backend.onrender.com/api/auth/getUser",
-          {
-            method: "get",
-            headers: {
-              "auth-token": `${id}`,
-            },
-          }
-        );
-        const data = await getUserData.json();
-        setName(data.name);
-        setEmail(data.email);
-        setAuthId(data._id);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred while logging in.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <>
-      {isloading == true ? (
+      {profileIsLoading == true || isloading==true ? (
         <Loader />
       ) : (
         <div className="profileContainer">

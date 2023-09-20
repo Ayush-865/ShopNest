@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Loader from './Loader';
+import productContext from '../context/productContext';
 
 const AddProduct = () => {
+
+  const {getProducts}=useContext(productContext);
 
   const [isloading, setIsLoading] = useState(false);
 
@@ -51,11 +54,12 @@ const AddProduct = () => {
       },
       method: "POST",
       body: JSON.stringify({ "name": name, "price": price, "company": company, "category": category, "image": productImage })
-    })
+    }) 
     const data = await (res.json());
     
     if (data.Status === "ok") {
       navigate("/");
+      getProducts();
     } else {
       console.error("Error uploading image:", data.message);
     }
