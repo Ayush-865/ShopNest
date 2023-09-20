@@ -1,27 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
+import productContext from "../context/productContext";
 
 const ProductsList = () => {
-  const [isloading, setIsLoading]=useState(false);
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    getProducts();
-  }, []);
+  const {products, setProducts,getProducts, productsIsLoading, authId}=useContext(productContext);
 
-  const getProducts = async () => {
-    try {
-      setIsLoading(true)
-      let result = await fetch(
-        "https://shopnest-backend.onrender.com/api/products/getProducts"
-      );
-      result = await result.json();
-      setProducts(result);
-    } catch (error) {
-    } finally{
-      setIsLoading(false)
-    }
-  };
   const handleDeleteProduct = async (id) => {
     await fetch(
       `https://shopnest-backend.onrender.com/api/products/product/${id}`,
@@ -53,7 +37,7 @@ const ProductsList = () => {
 
   return (
     <>
-      {isloading == true ? (
+      {productsIsLoading == true ? (
         <Loader />
       ) : (
         <>
@@ -79,18 +63,22 @@ const ProductsList = () => {
                     <li>Category: {item.category}</li>
                     <li>Company: {item.company}</li>
                   </ul>
-                  <div>
-                    <button>
-                      <Link to={"/update/" + item._id}>Update</Link>
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleDeleteProduct(item._id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  {String(authId) === String(item.user) ? (
+                    <div>
+                      <button>
+                        <Link to={"/update/" + item._id}>Update</Link>
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleDeleteProduct(item._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    <p></p>
+                  )}
                 </div>
               ))
             ) : (
